@@ -29,8 +29,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from #{ARGV.first || "students.csv"}"
+  puts "3. Save the list to a file of your choice"
+  puts "4. Load the list from a file of your choice"
   puts "9. Exit"
 end
 
@@ -94,6 +94,20 @@ def save_students
   puts "What do you want to call your saved file?\n"
   print ">"
   filename = STDIN.gets.chomp
+  CSV.open(filename, "w") do |csv_object|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_object << student_data
+    end
+  end
+end
+
+=begin #old FILE method
+def save_students
+  puts "You selected: save students\n\n"
+  puts "What do you want to call your saved file?\n"
+  print ">"
+  filename = STDIN.gets.chomp
   student_file = File.open(filename, "w") do |io|
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
@@ -103,7 +117,16 @@ def save_students
   end
   puts "File saved!\n\n"
 end
+=end
 
+def load_students(filename="students.csv")
+  CSV.foreach(filename) do |row|
+    name, cohort = row
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+end
+
+=begin #old FILE method
 def load_students(filename="students.csv")
   student_file = File.open(filename, "r") do |io|
     io.each_line do |line|
@@ -112,6 +135,7 @@ def load_students(filename="students.csv")
     end
   end
 end
+=end
 
 def try_load_students
   puts "Select file to load student information from. For example: 'students.csv'"
