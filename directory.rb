@@ -19,6 +19,8 @@ def process(selection)
     when "4"
       puts "You selected: load students"
       try_load_students
+    when "5"
+      delete_student
     when "9"
       exit
     else
@@ -31,6 +33,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to a file of your choice"
   puts "4. Load the list from a file of your choice"
+  puts "5. Delete a student"
   puts "9. Exit"
 end
 
@@ -152,6 +155,18 @@ def try_load_students
     puts "Sorry #{filename} doesn't exist."
     try_load_students
   end
+end
+
+def delete_student
+  puts "Which student do you want to delete - give their full name"
+  print ">"
+  student_to_delete = STDIN.gets.chomp
+  @students.each.with_index do |student_hash, idx|
+    if student_hash[:name] == student_to_delete
+      @students.delete_at(idx)
+    end
+  end
+  puts "#{student_to_delete} successfully deleted.\n\n"
 end
 
 =begin
